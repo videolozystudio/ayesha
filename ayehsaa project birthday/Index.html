@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayesha Ashq - Birthday Countdown</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* CSS Styling */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2424 50%, #111111 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Background Glow */
+        body::before {
+            content: ''; position: absolute; top: -10%; left: -10%; width: 50%; height: 50%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, transparent 70%); z-index: -1;
+        }
+        body::after {
+            content: ''; position: absolute; bottom: -10%; right: -10%; width: 50%; height: 50%;
+            background: radial-gradient(circle, rgba(193, 112, 112, 0.1) 0%, transparent 70%); z-index: -1;
+        }
+
+        /* Audio Control Button (Small & Compact) */
+        .audio-control {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            z-index: 100;
+        }
+        .audio-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: #d4af37;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.1rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .audio-btn:hover {
+            background: rgba(212, 175, 55, 0.2);
+            border-color: rgba(212, 175, 55, 0.8);
+            transform: scale(1.1);
+        }
+
+        .container {
+            max-width: 1200px; width: 90%; padding: 40px 0; text-align: center; z-index: 1;
+        }
+
+        .header h1 {
+            font-family: 'Great Vibes', cursive; font-size: 4.5rem; color: #d4af37;
+            font-weight: 400; margin-bottom: 10px; text-shadow: 2px 2px 10px rgba(212, 175, 55, 0.3);
+        }
+        .header p { font-size: 1.2rem; letter-spacing: 3px; text-transform: uppercase; color: #cccccc; font-weight: 300; }
+        .tagline { margin-top: 15px; font-size: 1.1rem; font-style: italic; color: #e0e0e0; font-family: 'Playfair Display', serif; }
+
+        /* Countdown */
+        .countdown-container { display: flex; justify-content: center; gap: 25px; margin: 50px 0; flex-wrap: wrap; }
+        .time-box {
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px); padding: 25px 35px; border-radius: 20px;
+            min-width: 150px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); transition: transform 0.3s ease;
+        }
+        .time-box:hover { transform: translateY(-5px); border-color: rgba(212, 175, 55, 0.5); }
+        .time-box span {
+            display: block; font-family: 'Playfair Display', serif; font-size: 3.5rem; font-weight: 600;
+            background: linear-gradient(to right, #d4af37, #f3e5ab); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+        .time-box p { font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase; color: #b3b3b3; font-weight: 400; }
+
+        /* Gallery */
+        .gallery { 
+            display: flex; 
+            justify-content: center; 
+            gap: 30px; 
+            margin: 60px 0; 
+            flex-wrap: wrap; 
+        }
+        .photo-card {
+            background: rgba(255, 255, 255, 0.03); padding: 15px; border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            transition: all 0.4s ease; 
+            width: calc(33.333% - 20px); /* 3 cards per row on desktop */
+            min-width: 280px;
+        }
+        .photo-card:hover { transform: scale(1.05) translateY(-10px); box-shadow: 0 20px 40px rgba(212, 175, 55, 0.2); border-color: rgba(212, 175, 55, 0.4); }
+        .photo-card img { width: 100%; height: 380px; object-fit: cover; border-radius: 12px; filter: brightness(0.9) contrast(1.1); transition: filter 0.4s ease; }
+        .photo-card:hover img { filter: brightness(1.05) contrast(1.1); }
+
+        /* About & Poetry */
+        .about-section, .poetry-section {
+            margin-top: 40px; padding: 40px; background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.08); backdrop-filter: blur(10px);
+            max-width: 800px; margin-left: auto; margin-right: auto;
+        }
+        .about-section h2, .poetry-section h2 { font-family: 'Playfair Display', serif; font-size: 2rem; color: #d4af37; margin-bottom: 20px; }
+        .about-section p { font-size: 1.1rem; line-height: 1.8; color: #d1d1d1; font-weight: 300; }
+
+        .poetry-section {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.05) 0%, rgba(0, 0, 0, 0.4) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.2); position: relative; box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+        .poetry-section::before { content: '“'; position: absolute; top: -10px; left: 20px; font-size: 8rem; font-family: 'Playfair Display', serif; color: rgba(212, 175, 55, 0.15); line-height: 1; z-index: 0; }
+        .poetry-section::after { content: '”'; position: absolute; bottom: -50px; right: 20px; font-size: 8rem; font-family: 'Playfair Display', serif; color: rgba(212, 175, 55, 0.15); line-height: 1; z-index: 0; }
+        .sher-text { font-family: 'Playfair Display', serif; font-size: 1.6rem; line-height: 2.2; color: #ffffff; font-style: italic; position: relative; z-index: 1; text-shadow: 1px 1px 5px rgba(0,0,0,0.5); }
+
+        .footer { margin-top: 50px; padding: 20px; font-size: 0.9rem; color: #777; letter-spacing: 1px; }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .photo-card { width: calc(50% - 15px); } /* 2 cards per row on tablets */
+        }
+        @media (max-width: 768px) {
+            .header h1 { font-size: 3rem; }
+            .time-box { padding: 20px; min-width: 120px; }
+            .time-box span { font-size: 2.5rem; }
+            .photo-card { width: 100%; } /* 1 card per row on mobile */
+            .about-section, .poetry-section { padding: 25px; }
+            .sher-text { font-size: 1.3rem; line-height: 1.8; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Audio -->
+    <audio id="bgMusic" loop>
+        <source src="bgm.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    
+    <!-- Compact Audio Button -->
+    <div class="audio-control">
+        <button class="audio-btn" id="muteBtn" onclick="toggleMute()" title="Mute/Unmute Music">
+            <span id="btnIcon">🔇</span>
+        </button>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Ayesha Ashq</h1>
+            <p>Upcoming Birthday</p>
+            <div class="tagline">"Poet, Writer, & Flutist"</div>
+        </div>
+
+        <!-- Countdown Timer -->
+        <div class="countdown-container" id="countdown">
+            <div class="time-box"><span id="days">00</span><p>Days</p></div>
+            <div class="time-box"><span id="hours">00</span><p>Hours</p></div>
+            <div class="time-box"><span id="minutes">00</span><p>Minutes</p></div>
+            <div class="time-box"><span id="seconds">00</span><p>Seconds</p></div>
+        </div>
+
+        <!-- Photo Gallery (6 Photos) -->
+        <div class="gallery">
+            <div class="photo-card"><img src="photo1.jpg" alt="Ayesha Ashq - Photo 1"></div>
+            <div class="photo-card"><img src="photo2.jpg" alt="Ayesha Ashq - Photo 2"></div>
+            <div class="photo-card"><img src="photo3.jpg" alt="Ayesha Ashq - Photo 3"></div>
+            <div class="photo-card"><img src="photo4.jpg" alt="Ayesha Ashq - Photo 4"></div>
+            <div class="photo-card"><img src="photo5.jpg" alt="Ayesha Ashq - Photo 5"></div>
+            <div class="photo-card"><img src="photo6.jpg" alt="Ayesha Ashq - Photo 6"></div>
+        </div>
+
+        <!-- About Section -->
+        <div class="about-section">
+            <h2>About the Birthday Star</h2>
+            <p>Ayesha is a remarkable poet who expresses her deepest emotions through Poetry, Nazm, Sher, and Ghazal. There is a unique tranquility in her beautiful words. Beyond her poetic talent, she also plays the flute, and the sweet melody of her music makes the atmosphere even more enchanting.</p>
+        </div>
+
+        <!-- Poetry Section -->
+        <div class="poetry-section">
+            <h2>Her Poetry</h2>
+            <div class="sher-text">
+                तेरे बातों की नरमी से सिहर उठती है मेरी रूह,<br>
+                लगाते जब हो सीने से बहाना भूल जाती हूँ।
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Created with love for Ayesha's Special Day • June 03, 2027</p>
+        </div>
+    </div>
+
+    <!-- JavaScript for Countdown & Audio -->
+    <script>
+        // --- Countdown Logic ---
+        const countDownDate = new Date("Jun 03, 2027 00:00:00").getTime();
+        const x = setInterval(function() {
+            const now = new Date().getTime();
+            const distance = countDownDate - now;
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerHTML = days < 10 ? "0" + days : days;
+            document.getElementById("hours").innerHTML = hours < 10 ? "0" + hours : hours;
+            document.getElementById("minutes").innerHTML = minutes < 10 ? "0" + minutes : minutes;
+            document.getElementById("seconds").innerHTML = seconds < 10 ? "0" + seconds : seconds;
+
+            if (distance < 0) {
+                clearInterval(x);
+                document.getElementById("countdown").innerHTML = "<h2 style='color: #d4af37; font-family: Playfair Display; font-size: 2rem;'>Happy Birthday Ayesha! 🎉</h2>";
+            }
+        }, 1000);
+
+        // --- Audio Control Logic ---
+        const audio = document.getElementById('bgMusic');
+        const btnIcon = document.getElementById('btnIcon');
+        
+        // Start muted due to browser autoplay policies
+        audio.muted = true;
+        audio.play().catch(e => console.log("Audio play blocked:", e));
+
+        function toggleMute() {
+            if (audio.muted) {
+                audio.muted = false;
+                btnIcon.textContent = '🔊'; // Change to speaker icon when unmuted
+            } else {
+                audio.muted = true;
+                btnIcon.textContent = '🔇'; // Change to mute icon when muted
+            }
+        }
+    </script>
+</body>
+</html>
